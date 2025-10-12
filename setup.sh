@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+function _info() {
+	echo "${@}" >&2
+}
+
+function _script_dir() {
+	local _script_dir
+	_script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+	echo "${_script_dir}"
+}
+
 ## _target_files returns the list of target files/directories to create/remove symlinks.
 ## Returns:
 ##   Prints each file/directory on a seperate line
@@ -13,10 +23,10 @@ function _target_files() {
 		".zshrc"
 	)
 
-	printf "%s\n" "${_files[@]}"
+	printf "$(_script_dir)/%s\n" "${_files[@]}"
 }
 
-## _install creates symlinks pointing to dotfiles in the current directory at the home directory.
+## _install creates symlinks pointing to files/directories at the home directory.
 ## Arguments:
 ##   $1 - force flag; 0 for skipping existing files, 1 for overwriting them
 ##   $@ - the list of files/directories to link
@@ -27,42 +37,48 @@ function _install() {
 
 	local _file _target
 	for _file in "${_files[@]}"; do
-		_target="$HOME/${_file}"
+		if [[ ! -e "${_file}" ]]; then
+			_info "File or directory not found: ${_file}"
+			return 1
+		fi
+
+		_target="$HOME/$(basename "${_file}")"
 
 		if [[ -e "${_target}" || -L "${_target}" ]]; then
 			if [[ "${_force}" -eq 1 ]]; then
 				rm -rf "${_target}"
-				echo "⚡ Overwriting existing: ${_file}" >&2
+				_info "⚡ Overwriting existing: ${_target}"
 			else
-				echo "⚠️ Skipping ${_file}, already exists: ${_target}" >&2
+				_info "⚠️ Skipping ${_file}, already exists: ${_target}"
 				continue
 			fi
 		fi
 
-		ln -sf "$PWD/${_file}" "${_target}"
-		echo "🔗 Linked: ${_file}" >&2
+		ln -sf "${_file}" "${_target}"
+		_info "🔗 Linked: ${_file}"
 	done
 
-	echo "✅ All symlinks created!" >&2
+	_info "✅ All symlinks created!"
 }
 
-## _uninstall deletes symlinks pointing to dotfiles in the current directory at the home directory.
+## _uninstall deletes symlinks pointing to files/directories at the home directory.
 ## Arguments:
 ##   $@ - the list of files/directories to link
 function _uninstall() {
 	local _files=("${@}")
 
-	local _file
+	local _file _target
 	for _file in "${_files[@]}"; do
-		if [[ -L "$HOME/${_file}" ]]; then
-			rm "$HOME/${_file}"
-			echo "❌ Removed symlink: ${_file}" >&2
+		_target="$HOME/$(basename "${_file}")"
+		if [[ -L "${_target}" ]]; then
+			rm "${_target}"
+			_info "❌ Removed symlink: ${_target}"
 		else
-			echo "⚠️ Not a symlink or does not exist: ${_file}" >&2
+			_info "⚠️ Not a symlink or does not exist: ${_target}"
 		fi
 	done
 
-	echo "✅ All symlinks removed!" >&2
+	_info "✅ All symlinks removed!"
 }
 
 function _show_help() {
@@ -105,9 +121,13 @@ function main() {
 			;;
 		*)
 			if [[ "${_parsing_target}" -eq 1 ]]; then
-				_targets+=("${1}")
+				if [[ "${1}" == /* ]]; then
+					_targets+=("${1}")
+				else
+					_targets+=("$(pwd)/${1}")
+				fi
 			else
-				echo "invalid args: ${1}" >&2
+				_info "invalid args: ${1}"
 				return 1
 			fi
 			;;
@@ -126,10 +146,9 @@ function main() {
 		done < <(_target_files)
 	fi
 
-	local _script_dir
-	_script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 	(
-		cd "${_script_dir}"
+		cd "$(_script_dir)"
+
 		case "${_subcommand}" in
 		install) _install "${_force}" "${_targets[@]}" || exit 1 ;;
 		uninstall) _uninstall "${_targets[@]}" || exit 1 ;;
@@ -138,7 +157,6 @@ function main() {
 			exit 1
 			;;
 		esac
-
 	) || return 1
 }
 
