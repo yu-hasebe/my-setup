@@ -16,9 +16,14 @@ function _install() {
 	for _file in "${FILES[@]}"; do
 		_target="$HOME/${_file}"
 
-		if [[ "${_force}" -eq 0 ]] && [[ -e "${_target}" || -L "${_target}" ]]; then
-			echo "⚠️ Skipping ${_file}, already exists: ${_target}" >&2
-            continue
+		if [[ -e "${_target}" || -L "${_target}" ]]; then
+			if [[ "${_force}" -eq 1 ]]; then
+				rm -rf "${_target}"
+				echo "⚡ Overwriting existing: ${_file}" >&2
+			else
+				echo "⚠️ Skipping ${_file}, already exists: ${_target}" >&2
+				continue
+			fi
 		fi
 
 		ln -sf "$PWD/${_file}" "${_target}"
@@ -46,8 +51,8 @@ function _show_help() {
 	echo "Usage: ${0} [-h] [-f] [install|uninstall]"
 	echo ""
 	echo "Commands:"
-	echo "  install   Creates symlinks"
-	echo "  uninstall Removes symlinks"
+	echo "  install   Creates symlinks at $HOME"
+	echo "  uninstall Removes symlinks at $HOME"
 	echo "Target files:"
 	echo "$(printf -- "  - %s\n" "${FILES[@]}")"
 	echo "Options:"
