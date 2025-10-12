@@ -71,6 +71,22 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+local function start_bashls()
+	local root = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1] or vim.loop.cwd())
+	vim.lsp.start({
+		name = "bashls",
+		cmd = { "bash-language-server", "start" },
+		root_dir = root,
+	})
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "sh,bash",
+	callback = function()
+		start_bashls()
+	end,
+})
+
 local function lsp_keymaps(bufnr)
 	local opts = { buffer = bufnr, silent = true }
 	-- NOTE:
