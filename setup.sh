@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-function _files() {
+## _target_files returns the list of target files/directories to create/remove symlinks.
+## Returns:
+##   Prints each file/directory on a seperate line
+function _target_files() {
 	local _files=(
 		".config"
 		".gitconfig"
@@ -13,6 +16,10 @@ function _files() {
 	printf "%s\n" "${_files[@]}"
 }
 
+## _install creates symlinks pointing to dotfiles in the current directory at the home directory.
+## Arguments:
+##   $1 - force flag; 0 for skipping existing files, 1 for overwriting them
+##   $@ - the list of files/directories to link
 function _install() {
 	local _force="${1}"
 	shift
@@ -39,6 +46,9 @@ function _install() {
 	echo "✅ All symlinks created!" >&2
 }
 
+## _uninstall deletes symlinks pointing to dotfiles in the current directory at the home directory.
+## Arguments:
+##   $@ - the list of files/directories to link
 function _uninstall() {
 	local _files=("${@}")
 
@@ -59,7 +69,7 @@ function _show_help() {
 	local _files=()
 	while IFS= read -r _file; do
 		_files+=("${_file}")
-	done < <(_files)
+	done < <(_target_files)
 
 	echo "Usage: ${0} [-h] [-f] [install|uninstall]"
 	echo ""
@@ -113,17 +123,23 @@ function main() {
 	if [[ "${#_targets[@]}" -eq 0 ]]; then
 		while IFS= read -r _file; do
 			_targets+=("${_file}")
-		done < <(_files)
+		done < <(_target_files)
 	fi
 
-	case "${_subcommand}" in
-	install) _install "${_force}" "${_targets[@]}" ;;
-	uninstall) _uninstall "${_targets[@]}" ;;
-	*)
-		echo "invalid subcommand: ${_subcommand}"
-		return 1
-		;;
-	esac
+	local _script_dir
+	_script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+	(
+		cd "${_script_dir}"
+		case "${_subcommand}" in
+		install) _install "${_force}" "${_targets[@]}" || exit 1 ;;
+		uninstall) _uninstall "${_targets[@]}" || exit 1 ;;
+		*)
+			echo "invalid subcommand: ${_subcommand}"
+			exit 1
+			;;
+		esac
+
+	) || return 1
 }
 
 main "${@:-}"
