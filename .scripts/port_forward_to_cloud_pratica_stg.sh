@@ -8,5 +8,5 @@ INSTANCE_ID=$(aws ec2 describe-instances \
 aws ssm start-session \
 	--target $INSTANCE_ID \
 	--document-name AWS-StartPortForwardingSessionToRemoteHost \
-	--parameters '{"host":["cloud-pratica-stg.cvy4cicekwyq.ap-northeast-1.rds.amazonaws.com"],"portNumber":["5432"], "localPortNumber":["15432"]}' \
+	--parameters '{"host":["cloud-pratica-stg.cf02gm0wee8u.ap-northeast-1.rds.amazonaws.com"],"portNumber":["5432"], "localPortNumber":["15432"]}' \
 	--profile cp-terraform-stg
