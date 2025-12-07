@@ -12,6 +12,8 @@ brew "go"
 brew "gopls"
 # Configurable static site generator
 brew "hugo"
+# Language Server for the Lua language
+brew "lua-language-server"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Static analysis and lint tool, for (ba)sh scripts
