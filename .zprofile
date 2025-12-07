@@ -1,4 +1,3 @@
-
 alias ll='ls -alF'
 alias vim='nvim'
 alias vi='nvim'
@@ -6,9 +5,6 @@ alias v='nvim'
 
 # homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Go
-export PATH="$PATH:$(go env GOPATH)/bin"
 
 # volta
 export PATH="$PATH:$HOME/.volta/bin"
