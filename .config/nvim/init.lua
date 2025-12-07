@@ -6,6 +6,10 @@ vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.o.clipboard = "unnamedplus"
 
+vim.cmd("syntax enable")
+vim.cmd("filetype plugin indent on")
+vim.cmd("colorscheme desert")
+
 vim.diagnostic.config({
 	virtual_text = true,
 	underline = true,
@@ -20,12 +24,6 @@ vim.api.nvim_set_keymap("i", "(<Enter>", "(<Enter><Enter>)<up><Tab>", { noremap 
 vim.api.nvim_set_keymap("i", "{<Enter>", "{<Enter><Enter>}<up><Tab>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "[<Enter>", "[<Enter><Enter>]<up><Tab>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "<<Enter>", "<<Enter><Enter>><up><Tab>", { noremap = true, silent = true })
-
-vim.cmd("syntax enable")
-vim.cmd("filetype plugin indent on")
-
--- FIXME: Use kanagawa.
-vim.cmd("colorscheme desert")
 
 local function lsp_keymaps(bufnr)
 	local opts = { buffer = bufnr, silent = true }
