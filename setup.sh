@@ -1,28 +1,24 @@
 #!/usr/bin/env bash
 # setup.sh creates or removes symlinks to dotfiles.
 #
-# Usage:
-# ./setup.sh install -t .*
-# ./setup.sh install -t .* -f
-# ./setup.sh uninstall -t .*
-#
 set -euo pipefail
 
 function _info() {
     echo "${@}" >&2
 }
 
+# _excluded_files returns dot-prefixed entries that should be ignored.
 function _excluded_files() {
     echo "."
     echo ".."
     echo ".git"
 }
 
-## _abspath converts a path (file or directory) to an absolute path.
-## Arguments:
-##   $1 - relative or absolute path
-## Returns:
-##   absolute path, or empty string if the given path doesn't exist
+# _abspath converts a path (file or directory) to an absolute path.
+# Arguments:
+#   $1 - relative or absolute path
+# Returns:
+#   absolute path, or empty string if the given path doesn't exist
 function _abspath() {
     local _path="${1}"
 
@@ -47,12 +43,12 @@ function _script_dir() {
     echo "${_script_dir}"
 }
 
-## _normalize_target converts a given path to an absolute path.
-## and returns an empty string if it should be excluded (., .., .git)
-## Arguments:
-##   $1 - path to normalize
-## Returns:
-##   absolute path, or empty string if excluded
+# _normalize_target converts a given path to an absolute path.
+# and returns an empty string if it should be excluded (., .., .git)
+# Arguments:
+#   $1 - path to normalize
+# Returns:
+#   absolute path, or empty string if excluded
 function _normalize_target() {
     local _path="${1}"
     local _basename
@@ -69,10 +65,10 @@ function _normalize_target() {
     _abspath "${_path}"
 }
 
-## _install creates symlinks pointing to files/directories at the home directory.
-## Arguments:
-##   $1 - force flag; 0 for skipping existing files, 1 for overwriting them
-##   $@ - the list of files/directories to link
+# _install creates symlinks pointing to files/directories at the home directory.
+# Arguments:
+#   $1 - force flag; 0 for skipping existing files, 1 for overwriting them
+#   $@ - the list of files/directories to link
 function _install() {
     local _force="${1}"
     shift
@@ -104,9 +100,9 @@ function _install() {
     _info "✅ All symlinks created!"
 }
 
-## _uninstall deletes symlinks pointing to files/directories at the home directory.
-## Arguments:
-##   $@ - the list of files/directories to unwlink
+# _uninstall deletes symlinks pointing to files/directories at the home directory.
+# Arguments:
+#   $@ - the list of files/directories to unwlink
 function _uninstall() {
     local _files=("${@}")
 
@@ -133,13 +129,27 @@ function _show_help() {
     echo "Commands:"
     echo "  install      Creates symlinks at $HOME"
     echo "  uninstall    Removes symlinks at $HOME"
+    echo ""
     echo "Required:"
     echo "  -t, --target Specifies the target files or directories to be replaced with symlinks"
     echo "               Excluded: ${_excluded}"
-    echo "               You can use path/to/dotfiles/.* for all dotfiles in the directory"
+    echo ""
     echo "Optional:"
     echo "  -h, --help   Shows this help message"
     echo "  -f, --force  Forcibly overwrites existing files or directories when creating symlinks (install only)"
+    echo ""
+    echo "Example:"
+    echo "  Creates symlinks in your $HOME without replacing any existing files, directories, or symlinks:"
+    echo "  $ ${0} install -t .*"
+    echo ""
+    echo "  Specifies particular files or directories:"
+    echo "  $ ${0} install -t .config"
+    echo ""
+    echo "  Forcefully replaces existing files, directories, or symlinks:"
+    echo "  $ ${0} install -t .* --force"
+    echo ""
+    echo "  Removes symlinks in your $HOME"
+    echo "  $ ${0} uninstall -t .*"
 }
 
 function main() {

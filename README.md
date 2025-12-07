@@ -23,21 +23,15 @@ brew bundle dump --describe --file=Brewfile --force
 
 ## Setting up dotfiles in your `$HOME` directory
 
-> [!NOTE]
-> FIXME: Add the following snipets to `setup.sh` or its help message.
-
-Create symlinks in your `$HOME` directory without replacing any existing files, directories or symlinks:
+To install dotfiles, run the following command from the repository root:
 ```bash
-./setup.sh install --target .*
+./setup.sh install -t .* --force
 ```
 
-Specify particular files or directories:
-```bash
-./setup.sh install --target .config .gitconfig
-```
+This command creates symbolic links in your $HOME directory for all files matching the pattern .* in this repository.
+The --force flag overwrites existing files or symlinks in $HOME.
 
-Forcefully replace existing files, directories, or symlinks:
+For additional commands and options, see:
 ```bash
-./setup.sh install --target .* --force
+./setup.sh --help
 ```
-
