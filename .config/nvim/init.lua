@@ -1,3 +1,4 @@
+
 vim.api.nvim_create_user_command(
     'InitLua',
     function()
@@ -38,15 +39,6 @@ vim.diagnostic.config({
 	underline = true,
 	update_in_insert = false,
 })
-
-vim.keymap.set("i", "(", "()<left>", { noremap = true, silent = true })
-vim.keymap.set("i", "{", "{}<left>", { noremap = true, silent = true })
-vim.keymap.set("i", "[", "[]<left>", { noremap = true, silent = true })
-vim.keymap.set("i", "<", "<><left>", { noremap = true, silent = true })
-vim.keymap.set("i", "(<Enter>", "(<Enter><Enter>)<up><Tab>", { noremap = true, silent = true })
-vim.keymap.set("i", "{<Enter>", "{<Enter><Enter>}<up><Tab>", { noremap = true, silent = true })
-vim.keymap.set("i", "[<Enter>", "[<Enter><Enter>]<up><Tab>", { noremap = true, silent = true })
-vim.keymap.set("i", "<<Enter>", "<<Enter><Enter>><up><Tab>", { noremap = true, silent = true })
 
 local augroup = vim.api.nvim_create_augroup('init.lua', {})
 
@@ -177,3 +169,100 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 require("config.lazy")
+
+require("mini.icons").setup()
+require("mini.statusline").setup()
+vim.opt.laststatus = 3
+vim.opt.cmdheight = 0
+
+local hipatterns = require('mini.hipatterns')
+local hi_words = require('mini.extra').gen_highlighter.words
+hipatterns.setup({
+  highlighters = {
+    -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+    fixme = hi_words({ 'FIXME', 'Fixme', 'fixme' }, 'MiniHipatternsFixme'),
+    hack = hi_words({ 'HACK', 'Hack', 'hack' }, 'MiniHipatternsHack'),
+    todo = hi_words({ 'TODO', 'Todo', 'todo' }, 'MiniHipatternsTodo'),
+    note = hi_words({ 'NOTE', 'Note', 'note' }, 'MiniHipatternsNote'),
+    -- Highlight hex color strings (`#rrggbb`) using that color
+    hex_color = hipatterns.gen_highlighter.hex_color(),
+  },
+})
+
+-- Why not work?
+require('mini.cursorword').setup()
+
+require('mini.indentscope').setup()
+require('mini.trailspace').setup()
+require('mini.starter').setup()
+require('mini.pairs').setup()
+require('mini.surround').setup()
+local gen_ai_spec = require('mini.extra').gen_ai_spec
+require('mini.ai').setup({
+  custom_textobjects = {
+    B = gen_ai_spec.buffer(),
+    D = gen_ai_spec.diagnostic(),
+    I = gen_ai_spec.indent(),
+    L = gen_ai_spec.line(),
+    N = gen_ai_spec.number(),
+    J = { { '()%d%d%d%d%-%d%d%-%d%d()', '()%d%d%d%d%/%d%d%/%d%d()' } }
+  },
+})
+
+local function mode_nx(keys)
+  return { mode = 'n', keys = keys }, { mode = 'x', keys = keys }
+end
+local clue = require('mini.clue')
+clue.setup({
+  triggers = {
+    -- Leader triggers
+    mode_nx('<leader>'),
+
+    -- Built-in completion
+    { mode = 'i', keys = '<c-x>' },
+
+    -- `g` key
+    mode_nx('g'),
+
+    -- Marks
+    mode_nx("'"),
+    mode_nx('`'),
+
+    -- Registers
+    mode_nx('"'),
+    { mode = 'i', keys = '<c-r>' },
+    { mode = 'c', keys = '<c-r>' },
+
+    -- Window commands
+    { mode = 'n', keys = '<c-w>' },
+
+    -- bracketed commands
+    { mode = 'n', keys = '[' },
+    { mode = 'n', keys = ']' },
+
+    -- `z` key
+    mode_nx('z'),
+
+    -- surround
+    mode_nx('s'),
+
+    -- text object
+    { mode = 'x', keys = 'i' },
+    { mode = 'x', keys = 'a' },
+    { mode = 'o', keys = 'i' },
+    { mode = 'o', keys = 'a' },
+
+    -- option toggle (mini.basics)
+    { mode = 'n', keys = 'm' },
+  },
+
+  clues = {
+    -- Enhance this by adding descriptions for <Leader> mapping groups
+    clue.gen_clues.builtin_completion(),
+    clue.gen_clues.g(),
+    clue.gen_clues.marks(),
+    clue.gen_clues.registers({ show_contents = true }),
+    clue.gen_clues.windows({ submode_resize = true, submode_move = true }),
+    clue.gen_clues.z(),
+  },
+})
