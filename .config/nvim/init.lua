@@ -3,7 +3,7 @@ vim.api.nvim_create_user_command(
     function()
         vim.cmd.edit(vim.fn.stdpath('config') .. '/init.lua')
     end,
-    {}
+    { desc = 'Open init.lua' }
 )
 
 vim.o.encoding = "utf-8"
@@ -12,6 +12,7 @@ vim.o.relativenumber = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
+-- Share clipboard with OS
 vim.o.clipboard = "unnamedplus"
 vim.o.cursorline = true
 
