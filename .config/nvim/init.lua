@@ -1,3 +1,11 @@
+vim.api.nvim_create_user_command(
+    'InitLua',
+    function()
+        vim.cmd.edit(vim.fn.stdpath('config') .. '/init.lua')
+    end,
+    {}
+)
+
 vim.o.encoding = "utf-8"
 vim.o.number = true
 vim.o.relativenumber = true
