@@ -39,14 +39,14 @@ vim.diagnostic.config({
 	update_in_insert = false,
 })
 
-vim.api.nvim_set_keymap("i", "(", "()<left>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "{", "{}<left>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "[", "[]<left>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "<", "<><left>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "(<Enter>", "(<Enter><Enter>)<up><Tab>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "{<Enter>", "{<Enter><Enter>}<up><Tab>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "[<Enter>", "[<Enter><Enter>]<up><Tab>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "<<Enter>", "<<Enter><Enter>><up><Tab>", { noremap = true, silent = true })
+vim.keymap.set("i", "(", "()<left>", { noremap = true, silent = true })
+vim.keymap.set("i", "{", "{}<left>", { noremap = true, silent = true })
+vim.keymap.set("i", "[", "[]<left>", { noremap = true, silent = true })
+vim.keymap.set("i", "<", "<><left>", { noremap = true, silent = true })
+vim.keymap.set("i", "(<Enter>", "(<Enter><Enter>)<up><Tab>", { noremap = true, silent = true })
+vim.keymap.set("i", "{<Enter>", "{<Enter><Enter>}<up><Tab>", { noremap = true, silent = true })
+vim.keymap.set("i", "[<Enter>", "[<Enter><Enter>]<up><Tab>", { noremap = true, silent = true })
+vim.keymap.set("i", "<<Enter>", "<<Enter><Enter>><up><Tab>", { noremap = true, silent = true })
 
 local augroup = vim.api.nvim_create_augroup('init.lua', {})
 
