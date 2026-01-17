@@ -193,6 +193,7 @@ require('mini.cursorword').setup()
 
 require('mini.indentscope').setup()
 require('mini.trailspace').setup()
+-- require('mini.sessions').setup()
 require('mini.starter').setup()
 require('mini.pairs').setup()
 require('mini.surround').setup()
@@ -361,3 +362,8 @@ vim.keymap.set('c', 'h', function()
   end
   return 'h'
 end, { expr = true, desc = 'mini.pick.help' })
+
+require('mini.diff').setup()
+
+require('mini.git').setup()
+vim.keymap.set({ 'n', 'x' }, '<space>gs', MiniGit.show_at_cursor, { desc = 'Show at cursor' })
