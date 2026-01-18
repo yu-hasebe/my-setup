@@ -51,7 +51,7 @@ create_autocmd("BufWritePre", {
 
 require("mini.icons").setup()
 
-require("config.lazy")
+require("helpers.lazy")
 
 vim.cmd.colorscheme("kanagawa")
 require("mini.icons").setup()
