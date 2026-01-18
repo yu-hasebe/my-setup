@@ -49,6 +49,8 @@ create_autocmd("BufWritePre", {
 	desc = "Auto mkdir to save files",
 })
 
+require("helpers.mini")
+
 require("mini.icons").setup()
 
 require("helpers.lazy")
