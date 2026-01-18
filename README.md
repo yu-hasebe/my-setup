@@ -13,12 +13,12 @@ Before running anything, make sure you install:
 
 To install everything from Brewfile:
 ```bash
-brew bundle install --file=Brewfile
+make install-from-brewfile
 ```
 
 To update Brewfile:
 ```bash
-brew bundle dump --describe --file=Brewfile --force
+make update-brewfile
 ```
 
 ## Setting up dotfiles in your `$HOME` directory
