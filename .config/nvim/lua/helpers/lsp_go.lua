@@ -8,7 +8,7 @@ local function lsp_keymaps(bufnr)
 	vim.keymap.set("i", "<C-q>", "<C-x><C-o>", opts)
 end
 
-return {
+vim.api.nvim_create_autocmd("FileType", {
 	pattern = "go",
 	callback = function()
 		vim.lsp.start({
@@ -33,4 +33,4 @@ return {
 			end,
 		})
 	end,
-}
+})
