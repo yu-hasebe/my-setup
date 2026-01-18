@@ -19,6 +19,12 @@ vim.lsp.config("*", {
 	root_markers = { ".git" },
 })
 
+vim.api.nvim_create_user_command(
+  'LspHealth',
+  'checkhealth vim.lsp',
+  { desc = 'LSP health check' }
+)
+
 local lua_opts = require("helpers.lsp_lua")
 vim.lsp.config("lua", lua_opts)
 vim.lsp.enable("lua")
