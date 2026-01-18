@@ -9,7 +9,6 @@ function create_autocmd(event, opts)
 	)
 end
 
-
 return {
-  create_autocmd = create_autocmd,
+	create_autocmd = create_autocmd,
 }

@@ -1,4 +1,4 @@
-require('helpers.auto_command')
+require("helpers.auto_command")
 
 -- Lua configuration
 create_autocmd("FileType", {
@@ -36,4 +36,3 @@ create_autocmd("FileType", {
 		})
 	end,
 })
-

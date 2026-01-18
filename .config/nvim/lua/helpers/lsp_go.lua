@@ -34,4 +34,3 @@ create_autocmd("FileType", {
 		})
 	end,
 })
-
