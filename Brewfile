@@ -4,6 +4,8 @@ tap "sass/sass"
 brew "awscli"
 # Language Server for Bash
 brew "bash-language-server"
+# Command-line fuzzy finder written in Go
+brew "fzf"
 # GitHub command-line tool
 brew "gh"
 # Open source programming language to build simple/reliable/efficient software
@@ -26,6 +28,8 @@ brew "starship"
 brew "stylua"
 # Terminal multiplexer
 brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
 # JavaScript toolchain manager for reproducible environments
 brew "volta"
 # Stylesheet Preprocessor
