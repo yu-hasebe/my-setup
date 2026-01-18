@@ -1,3 +1,14 @@
+local augroup = vim.api.nvim_create_augroup("lua/helpers/lsp/go.lua", {})
+
+local function create_autocmd(event, opts)
+	vim.api.nvim_create_autocmd(
+		event,
+		vim.tbl_extend("force", {
+			group = augroup,
+		}, opts)
+	)
+end
+
 local function lsp_keymaps(bufnr)
 	local opts = { buffer = bufnr, silent = true }
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
@@ -8,7 +19,7 @@ local function lsp_keymaps(bufnr)
 	vim.keymap.set("i", "<C-q>", "<C-x><C-o>", opts)
 end
 
-vim.api.nvim_create_autocmd("FileType", {
+create_autocmd("FileType", {
 	pattern = "go",
 	callback = function()
 		vim.lsp.start({

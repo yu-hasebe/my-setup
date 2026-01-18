@@ -1,4 +1,15 @@
-vim.api.nvim_create_autocmd("FileType", {
+local augroup = vim.api.nvim_create_augroup("lua/helpers/lsp/lua.lua", {})
+
+local function create_autocmd(event, opts)
+	vim.api.nvim_create_autocmd(
+		event,
+		vim.tbl_extend("force", {
+			group = augroup,
+		}, opts)
+	)
+end
+
+create_autocmd("FileType", {
 	pattern = { "lua" },
 	callback = function()
 		vim.lsp.start({
